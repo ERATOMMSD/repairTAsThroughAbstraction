@@ -1,0 +1,15 @@
+OfByOneFault
+
+ChangeClockReset
+
+ChangeLabel
+
+ChangeGuard
+
+ChangeAction
+
+NegateGuard
+
+ChangeInvariant
+
+InvertReset

@@ -1,0 +1,107 @@
+(************************************************************
+ *                      IMITATOR MODEL                      
+ *
+ * Car alarm system
+ *
+ * Description     : Running Example
+ * Correctness     : Model can be repaired
+ * Source          : "Debugging with Timed Automata Mutations", Bernhard K. Aichernig, Klaus Hörmaier, and Florian Lorber, SAFECOMP 2014, https://doi.org/10.1007/978-3-319-10506-2_4
+ * Author          : Bernhard K. Aichernig, Klaus Hörmaier, and Florian Lorber
+ * Modeling        : ?
+ * Input by        : Étienne André
+ * License         : Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+ *
+ * Created         : 2019/04/09
+ * Last modified   : 2019/04/09
+ *
+ * IMITATOR version: 2.10.4
+ ************************************************************)
+
+var
+
+(* Clocks *)
+ 	x, xabs
+		: clock;
+
+(* Parameters *) p2, p3, p4: parameter;
+(* Parameter assignments ta: p2=3, p3=5, p4=8 *)
+(* Parameter assignments oracle: p2=3, p3=5, p4=8 *)
+
+
+(************************************************************)
+  automaton pta
+(************************************************************)
+synclabs: a, b, c, d;
+
+loc l1: invariant x<=4
+	when x<=p3 sync a goto l2;
+	
+loc l2: invariant x<=p3
+	when x=p3 sync b goto l3;
+	when x>=4 sync c goto l4;
+	
+loc l3: invariant True
+	when x>=p4 sync d goto l5;
+
+loc l4: invariant x<=6
+
+loc l5: invariant True
+	
+end (* pta *)
+
+
+(***********************************************************)
+  automaton trace
+(************************************************************)
+synclabs: a,b,c,d, finish;
+
+(* BEGIN GENERATED *)
+
+(* END GENERATED *)
+
+loc finished: invariant True
+
+end (* trace *)
+
+
+(************************************************************)
+(* Initial state *)
+(************************************************************)
+
+init :=
+	(*------------------------------------------------------------*)
+	(* Initial location *)
+	(*------------------------------------------------------------*)
+	& loc[pta] = l1
+	& loc[trace] = l0
+	
+	(*------------------------------------------------------------*)
+	(* Initial clock constraints *)
+	(*------------------------------------------------------------*)
+	& x = 0
+	& xabs = 0
+
+	(*------------------------------------------------------------*)
+	(* Parameter constraints *)
+	(*------------------------------------------------------------*)
+	& p2 >= 0
+	& p3 >= 0
+	& p4 >= 0
+	
+;
+
+
+(************************************************************)
+(* Property specification *)
+(************************************************************)
+
+property := unreachable
+	loc[trace] = finished
+;
+
+
+(************************************************************)
+(* The end 	*)
+(************************************************************)
+end
+

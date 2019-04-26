@@ -1,0 +1,107 @@
+(************************************************************
+ *                      IMITATOR MODEL                      
+ *
+ * Car alarm system
+ *
+ * Description     : Running Example
+ * Correctness     : Model can be repaired
+ * Source          : "Debugging with Timed Automata Mutations", Bernhard K. Aichernig, Klaus Hörmaier, and Florian Lorber, SAFECOMP 2014, https://doi.org/10.1007/978-3-319-10506-2_4
+ * Author          : Bernhard K. Aichernig, Klaus Hörmaier, and Florian Lorber
+ * Modeling        : ?
+ * Input by        : Étienne André
+ * License         : Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+ *
+ * Created         : 2019/04/09
+ * Last modified   : 2019/04/09
+ *
+ * IMITATOR version: 2.10.4
+ ************************************************************)
+
+var
+
+(* Clocks *)
+ 	x, y, xabs
+		: clock;
+
+(* Parameters *) p1, p2, p3, p4, pabs: parameter;
+(* Parameter assignments ta: p1=4, p2=2, p3=3, p4=4 *)
+(* Parameter assignments oracle: p1=5, p2=3, p3=1, p4=4 *)
+
+
+(************************************************************)
+  automaton pta
+(************************************************************)
+synclabs: a, b, c;
+
+loc l1: invariant x<=4
+	when x<=p3 sync a goto l2;
+	when x>p2 sync a goto l4;
+
+	when x<=p3 & xabs = pabs sync a goto l2copy;
+	when x>p2 & xabs = pabs sync a goto l4copy;
+
+loc l2: invariant x<=p3
+	when x=p3 & y>=4 sync b goto l3;
+
+	when x=p3 & y>=4 & xabs = pabs sync b goto l3copy;
+
+loc l3: invariant True
+
+loc l4: invariant x<=6
+	when y>1 & x>p4 sync c goto l5;
+
+	when y>1 & x>p4 & xabs = pabs sync c goto l5copy;
+
+loc l5: invariant True
+	
+urgent loc l2copy: invariant True
+urgent loc l3copy: invariant True
+urgent loc l4copy: invariant True
+urgent loc l5copy: invariant True
+
+end (* pta *)
+
+(************************************************************)
+(* Initial state *)
+(************************************************************)
+
+init :=
+	(*------------------------------------------------------------*)
+	(* Initial location *)
+	(*------------------------------------------------------------*)
+	& loc[pta] = l1
+
+	(*------------------------------------------------------------*)
+	(* Initial clock constraints *)
+	(*------------------------------------------------------------*)
+	& x = 0
+	& y = 0
+	& xabs = 0
+
+	(*------------------------------------------------------------*)
+	(* Parameter constraints *)
+	(*------------------------------------------------------------*)
+	& p1 >= 4 & p1<=5
+	& p2 >= 2 & p2<=3
+	& p3 >= 1 & p3<=3
+	& p4 >= 4 & p4<=4
+	& pabs >= 0
+
+;
+
+
+(************************************************************)
+(* Property specification *)
+(************************************************************)
+
+(* property := unreachable
+	loc[trace] = finished
+;*)
+projectresult(pabs)
+
+
+(************************************************************)
+(* The end 	*)
+(************************************************************)
+end
+

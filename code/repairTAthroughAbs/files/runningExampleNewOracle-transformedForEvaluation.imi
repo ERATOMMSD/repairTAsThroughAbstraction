@@ -1,0 +1,103 @@
+(************************************************************
+ *                      IMITATOR MODEL                      
+ *
+ * Car alarm system
+ *
+ * Description     : Running Example
+ * Correctness     : Model can be repaired
+ * Source          : "Debugging with Timed Automata Mutations", Bernhard K. Aichernig, Klaus Hörmaier, and Florian Lorber, SAFECOMP 2014, https://doi.org/10.1007/978-3-319-10506-2_4
+ * Author          : Bernhard K. Aichernig, Klaus Hörmaier, and Florian Lorber
+ * Modeling        : ?
+ * Input by        : Étienne André
+ * License         : Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+ *
+ * Created         : 2019/04/09
+ * Last modified   : 2019/04/09
+ *
+ * IMITATOR version: 2.10.4
+ ************************************************************)
+
+var
+
+(* Clocks *)
+ 	x, xabs
+		: clock;
+
+(* Parameters *) p2, p3, p4, pabs: parameter;
+(* Parameter assignments ta: p2=3, p3=5, p4=8 *)
+(* Parameter assignments oracle: p2=3, p3=5, p4=8 *)
+
+
+(************************************************************)
+  automaton pta
+(************************************************************)
+synclabs: a, b, c, d;
+
+loc l1: invariant x<=4
+	when x<=p3 sync a goto l2;
+	
+	when x<=p3 & xabs = pabs sync a goto l2copy;
+	
+loc l2: invariant x<=p3
+	when x=p3 sync b goto l3;
+	when x>=4 sync c goto l4;
+	
+	when x=p3 & xabs = pabs sync b goto l3copy;
+	when x>=4 & xabs = pabs sync c goto l4copy;
+	
+loc l3: invariant True
+	when x>=p4 sync d goto l5;
+
+	when x>=p4 & xabs = pabs sync d goto l5copy;
+
+loc l4: invariant x<=6
+
+loc l5: invariant True
+	
+urgent loc l2copy: invariant True
+urgent loc l3copy: invariant True
+urgent loc l4copy: invariant True
+urgent loc l5copy: invariant True
+
+end (* pta *)
+
+
+(************************************************************)
+(* Initial state *)
+(************************************************************)
+
+init :=
+	(*------------------------------------------------------------*)
+	(* Initial location *)
+	(*------------------------------------------------------------*)
+	& loc[pta] = l1
+	
+	(*------------------------------------------------------------*)
+	(* Initial clock constraints *)
+	(*------------------------------------------------------------*)
+	& x = 0
+	& xabs = 0
+
+	(*------------------------------------------------------------*)
+	(* Parameter constraints *)
+	(*------------------------------------------------------------*)
+	& p2 >= 2 & p2<=4
+	& p3 >= 4 & p3<=6
+	& p4 >= 7 & p4<=9
+	& pabs >= 0
+	
+;
+
+
+(************************************************************)
+(* Property specification *)
+(************************************************************)
+
+projectresult(pabs)
+
+
+(************************************************************)
+(* The end 	*)
+(************************************************************)
+end
+

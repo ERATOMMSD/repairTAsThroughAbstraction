@@ -1,0 +1,117 @@
+(************************************************************
+ *                      IMITATOR MODEL                      
+ *
+ * Coffee machine from MoMuT converted into IMITATOR format, to have a common benchmark
+ *			
+ * Correctness     : Model can be repaired
+ * Source          : Own work
+ * Author          : Marco Radavelli
+ * Modeling        : From MoMuT
+ * Input by        : Marco Radavelli
+ * License         : Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+ *
+ * Created         : 2019/02/25
+ * Last modified   : 2019/03/12
+ *
+ * IMITATOR version: 2.11
+ ************************************************************)
+
+var
+
+(* Clocks *)
+ 	x, xabs,
+		: clock;
+
+(* Parameters *) p1, p2 = 2, p3, p4,
+	pabs
+	: parameter;
+
+
+(************************************************************)
+  automaton pta
+(************************************************************)
+synclabs: coin, refund, c, t, coffee, tea;
+
+loc l1: invariant x <= 3
+	when x >= 0 sync coin do {x := 0} goto l2;
+	when x >= 0 sync coin goto l3;
+
+	when x >= 0 & xabs = pabs sync coin do {x := 0} goto l2copy;
+	when x >= 0 & xabs = pabs sync coin goto l3copy;
+
+loc l2: invariant x <= p1
+	when x = p1 do {x := 0} sync refund goto l1;
+
+	when x = p1 & xabs = pabs sync refund goto l1copy;
+
+loc l3: invariant x <= p2
+	when x <= p2 sync c goto l4;
+	when x <= p2 sync t goto l5;
+
+	when x <= p2 & xabs = pabs sync c goto l4copy;
+	when x <= p2 & xabs = pabs sync t goto l5copy;
+
+loc l4: invariant x <= p3
+	when x <= p3 do {x := 0} sync coffee goto l1;
+
+	when x <= p3 & xabs = pabs sync coffee goto l1copy;
+
+loc l5: invariant x <= p4
+	when x <= p4 do {x := 0} sync tea goto l1;
+
+	when x <= p4 & xabs = pabs sync tea goto l1copy;
+
+urgent loc l1copy: invariant True
+urgent loc l2copy: invariant True
+urgent loc l3copy: invariant True
+urgent loc l4copy: invariant True
+urgent loc l5copy: invariant True
+
+end (* pta *)
+
+
+(************************************************************)
+(* Initial state *)
+(************************************************************)
+
+init :=
+	(*------------------------------------------------------------*)
+	(* Initial location *)
+	(*------------------------------------------------------------*)
+	& loc[pta] = l1
+(* 	& loc[trace] = l0 *)
+	
+	(*------------------------------------------------------------*)
+	(* Initial clock constraints *)
+	(*------------------------------------------------------------*)
+	& x = 0
+	& xabs = 0
+
+	(*------------------------------------------------------------*)
+	(* Parameter constraints *)
+	(*------------------------------------------------------------*)
+	& 0 <= p1 & p1 <= 4
+	& 1 <= p2 & p2 <= 3
+	& 4 <= p3 & p3 <= 9
+	& 8 <= p4 & p4 <= 11
+	
+;
+
+
+(************************************************************)
+(* Property specification *)
+(************************************************************)
+
+property := unreachable
+	loc[pta] = l1copy
+	or loc[pta] = l2copy
+	or loc[pta] = l3copy
+	or loc[pta] = l4copy
+	or loc[pta] = l5copy
+;
+projectresult(pabs)
+
+(************************************************************)
+(* The end 	*)
+(************************************************************)
+end
