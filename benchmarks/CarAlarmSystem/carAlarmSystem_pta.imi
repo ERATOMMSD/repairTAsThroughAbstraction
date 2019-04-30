@@ -1,0 +1,129 @@
+(************************************************************
+ *                      IMITATOR MODEL                      
+ *
+ * Car alarm system
+ *
+ * Description     : Car alarm system
+ * Correctness     : Model can be repaired
+ * Source          : "Debugging with Timed Automata Mutations", Bernhard K. Aichernig, Klaus Hörmaier, and Florian Lorber, SAFECOMP 2014, https://doi.org/10.1007/978-3-319-10506-2_4
+ * Author          : Bernhard K. Aichernig, Klaus Hörmaier, and Florian Lorber
+ * Modeling        : ?
+ * Input by        : Étienne André
+ * License         : Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+ *
+ * Created         : 2019/01/25
+ * Last modified   : 2019/01/25
+ *
+ * IMITATOR version: 2.10.4
+ ************************************************************)
+
+var
+
+(* Clocks *)
+ 	c, d, e, f, g, xabs
+		: clock;
+
+(* Parameters *) p1, p2, p3: parameter;
+(* Parameter assignments ta:     p1=20, p2=31, p3=299 *)
+(* Parameter assignments oracle: p1=10, p2=30, p3=300 *)
+
+
+(************************************************************)
+  automaton pta
+(************************************************************)
+synclabs: armedOff, armedOn, close, flashOff, flashOn, lock, open, soundOff, soundOn, unlock;
+
+loc l1: invariant True
+	when True sync close goto l2;
+	when True sync lock goto l3;
+
+loc l2: invariant True
+	when True sync open goto l1;
+	when True sync lock do {c := 0} goto l5;
+
+loc l3: invariant True
+	when True sync unlock goto l1;
+	when True sync close do {c := 0} goto l5;
+
+loc l4: invariant True
+	when True sync unlock goto l1;
+	when True sync close do {f := 0} goto l9;
+
+loc l5: invariant c <= p1
+	when c < p1 sync unlock goto l2;
+	when c < p1 sync open goto l3;
+	when c = p1 sync armedOn goto l8;
+
+loc l6: invariant g <= 0
+	when True sync flashOff goto l1;
+
+loc l7: invariant d <= 0
+	when True sync armedOff goto l2;
+
+loc l8: invariant True
+	when True sync unlock do {d := 0} goto l7;
+	when True sync open do {e := 0} goto l11;
+
+loc l9: invariant f <= 0
+	when True sync armedOn goto l8;
+
+loc l10: invariant e <= p3
+	when True sync flashOff goto l4;
+
+loc l11: invariant e <= 0
+	when True sync armedOff goto l12;
+
+loc l12: invariant e <= 0
+	when True sync flashOn goto l13;
+
+loc l13: invariant e <= 0
+	when True sync soundOn goto l14;
+
+loc l14: invariant e <= p2
+	when e < p2 sync unlock do {g := 0} goto l15;
+	when e = p2 sync soundOff goto l16;
+	
+loc l15: invariant g <= 0
+	when True sync soundOff goto l6;
+	
+loc l16: invariant e <= p3
+	when True sync unlock do {g := 0} goto l15;
+	when e = p3 sync soundOff goto l10;
+	
+end (* pta *)
+
+(************************************************************)
+(* Initial state *)
+(************************************************************)
+
+init :=
+	(*------------------------------------------------------------*)
+	(* Initial location *)
+	(*------------------------------------------------------------*)
+	& loc[pta] = l1
+	
+	(*------------------------------------------------------------*)
+	(* Initial clock constraints *)
+	(*------------------------------------------------------------*)
+	& c = 0
+	& d = 0
+	& e = 0
+	& f = 0
+	& g = 0
+	& xabs = 0
+
+	(*------------------------------------------------------------*)
+	(* Parameter constraints *)
+	(*------------------------------------------------------------*)
+	& p1 >= 9 & p1 <= 21
+	& p2 >= 29 & p2 <= 31
+	& p3 >= 298 & p3 >= 301
+	
+;
+
+
+(************************************************************)
+(* The end 	*)
+(************************************************************)
+end
+

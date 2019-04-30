@@ -1,0 +1,66 @@
+(************************************************************
+ *                      IMITATOR MODEL                      
+ *
+ * Running Example second oracle
+ *
+ * Description     : Running Example Second Oracle
+ * Correctness     : True
+ * Source          : Marco Radavelli, Étienne André
+ * Author          : Marco Radavelli, Étienne André
+ * Modeling        : ?
+ * Input by        : Étienne André
+ * License         : Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+ *
+ * Created         : 2019/04/09
+ * Last modified   : 2019/04/09
+ *
+ * IMITATOR version: 2.10.4
+ ************************************************************)
+
+var
+
+(* Clocks *)
+ 	x: clock;
+
+(************************************************************)
+  automaton ta
+(************************************************************)
+synclabs: a, b, c, d;
+
+loc l1: invariant x<=4
+	when x<=3 sync a goto l2;
+	
+loc l2: invariant x<=5
+	when x=5 sync b goto l3;
+	when x>=4 sync c goto l4;
+	
+loc l3: invariant True
+	when x>=8 sync d goto l5;
+
+loc l4: invariant x<=6
+
+loc l5: invariant True
+	
+end (* ta *)
+
+(************************************************************)
+(* Initial state *)
+(************************************************************)
+
+init :=
+	(*------------------------------------------------------------*)
+	(* Initial location *)
+	(*------------------------------------------------------------*)
+	& loc[ta] = l1
+	
+	(*------------------------------------------------------------*)
+	(* Initial clock constraints *)
+	(*------------------------------------------------------------*)
+	& x = 0
+;
+
+(************************************************************)
+(* The end 	*)
+(************************************************************)
+end
+

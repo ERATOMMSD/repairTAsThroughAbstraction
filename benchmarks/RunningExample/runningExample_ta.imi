@@ -1,0 +1,69 @@
+(************************************************************
+ *                      IMITATOR MODEL                      
+ *
+ * Running Example
+ *
+ * Description     : Running Example
+ * Correctness     : Model can be repaired
+ * Source          : Our own
+ * Author          : Marco Radavelli, Étienne André, Paolo Arcaini
+ * Modeling        : ?
+ * Input by        : Étienne André
+ * License         : Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+ *
+ * Created         : 2019/04/09
+ * Last modified   : 2019/04/09
+ *
+ * IMITATOR version: 2.10.4
+ ************************************************************)
+
+var
+
+(* Clocks *)
+ 	x, y : clock;
+
+(************************************************************)
+  automaton ta
+(************************************************************)
+synclabs: a, b, c;
+
+loc l1: invariant x<=4
+	when x<=3 sync a goto l2;
+	when x>2 sync a goto l4;
+
+loc l2: invariant x<=3
+	when x=3 & y>=4 sync b goto l3;
+	
+loc l3: invariant True
+
+loc l4: invariant x<=6
+	when y>1 & x>4 sync c goto l5;
+
+loc l5: invariant True
+	
+end (* ta *)
+
+
+(************************************************************)
+(* Initial state *)
+(************************************************************)
+
+init :=
+	(*------------------------------------------------------------*)
+	(* Initial location *)
+	(*------------------------------------------------------------*)
+	& loc[ta] = l1
+	
+	(*------------------------------------------------------------*)
+	(* Initial clock constraints *)
+	(*------------------------------------------------------------*)
+	& x = 0
+	& y = 0
+
+;
+
+(************************************************************)
+(* The end 	*)
+(************************************************************)
+end
+

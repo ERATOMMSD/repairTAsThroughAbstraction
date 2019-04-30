@@ -1,0 +1,69 @@
+(************************************************************
+ *                      IMITATOR MODEL                      
+ *
+ * Coffee machine from MoMuT converted into IMITATOR format, to have a common benchmark
+ *			
+ * Correctness     : Model can be repaired
+ * Source          : Own work
+ * Author          : Marco Radavelli
+ * Modeling        : From MoMuT
+ * Input by        : Marco Radavelli
+ * License         : Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+ *
+ * Created         : 2019/02/25
+ * Last modified   : 2019/02/25
+ *
+ * IMITATOR version: 2.10.2
+ ************************************************************)
+
+var
+
+(* Clocks *)
+ 	x : clock;
+
+(************************************************************)
+  automaton ta
+(************************************************************)
+synclabs: coin, refund, coin, c, t, coffee, tea;
+
+loc l1: invariant x <= 3
+	when x >= 0 sync coin do {x := 0} goto l2;
+	when x >= 0 sync coin goto l3;
+
+loc l2: invariant x <= 10
+	when x = 10 sync refund do {x:=0} goto l1;
+
+loc l3: invariant x <= 3
+	when x <= 3 sync c goto l4;
+	when x <= 3 sync t goto l5;
+
+loc l4: invariant x <= 6
+	when x <= 6 sync coffee do {x:=0} goto l1;
+
+loc l5: invariant x <= 9
+	when x <= 9 sync tea do {x:=0} goto l1;
+	
+end (* ta *)
+
+
+(************************************************************)
+(* Initial state *)
+(************************************************************)
+
+init :=
+	(*------------------------------------------------------------*)
+	(* Initial location *)
+	(*------------------------------------------------------------*)
+	& loc[ta] = l1
+	
+	(*------------------------------------------------------------*)
+	(* Initial clock constraints *)
+	(*------------------------------------------------------------*)
+	& x = 0
+	
+;
+
+(************************************************************)
+(* The end 	*)
+(************************************************************)
+end
