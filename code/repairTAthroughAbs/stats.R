@@ -77,7 +77,7 @@ sm <- geom_smooth(method=lm, se=FALSE) #see: http://www.sthda.com/english/wiki/g
 # statistics about comparison experiments
 statistics <- function() {
   print("Table 1")
-  assign("dat", read.csv(paste(folderInput,"stats.txt",sep=""), encoding="UTF-8", row.names = NULL), envir=.GlobalEnv)
+  assign("dat", read.csv(paste(folderInput,"stats.csv",sep=""), encoding="UTF-8", row.names = NULL), envir=.GlobalEnv)
   
   #dat[dat == "RANDOM"] <- "policyrand"
 

@@ -9,7 +9,8 @@ The artificat is composed by:
 - stats.R	script that reads from files/stats.txt, and produces the statistics for the experiments evaluation (for Table 3 in the paper)
 
 *** SET UP ***
-TODO
+On Linux, run: compile.sh
 
 *** HOW TO REPLICATE RESULTS ***
-To obtain benchmarks statistics (Table 2), run 
+To obtain benchmarks statistics (Table 2), run benchmarksStats.sh
+To execute experiments and produce files/stats.csv with the evaluation metrics in output, and the numbers in Table 3 to the standard output, run runExperiments.sh . Obs: R is needed in the machine.

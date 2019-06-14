@@ -57,7 +57,7 @@ public class DistanceCalculator {
 	
 	@org.junit.Test
 	public void addDistancesToStatsFile() throws Exception {
-		BufferedReader fin = new BufferedReader(new FileReader("files/stats.txt"));
+		BufferedReader fin = new BufferedReader(new FileReader("files/stats.csv"));
 		String line = "";
 		Map<Benchmark,Set<String>> testsToEvaluateEachBenchmark = new HashMap<>(); // tests generated given taInit and oracle
 		Map<String,double[]> ratios = new HashMap<>(); // COFFEE_MOMUT2 {p1=1.0, p2=2.0, p3=8.0, p4=10.0} -> 0.67
