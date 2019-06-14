@@ -3,8 +3,16 @@
 # The suggestion is to use Rstudio as IDE and make sure to have the flag "Source on Save" checked.
 # ( see: http://stackoverflow.com/questions/13672720/r-command-for-setting-working-directory-to-source-file-location )
 # If it doesn't work because of UTF8, see: https://support.rstudio.com/hc/en-us/community/posts/200661587-Bug-when-sourcing-the-application?sort_by=votes 
-this.dir <- dirname(parent.frame(2)$ofile)
-setwd(this.dir)
+if(.Platform$OS.type == "unix") {
+	setwd(system("pwd", intern = T) ) # https://stackoverflow.com/questions/13672720/r-command-for-setting-working-directory-to-source-file-location-in-rstudio/38150810#38150810
+} else {
+	this.dir <- dirname(parent.frame(2)$ofile)
+	setwd(this.dir)
+}
+
+#install.packages("ggplot2")
+for (p in c("ggplot2", "sqldf", "gridExtra", "gtable", "grid", "scales", "reshape2", "rPref", "xtable", "directlabels", "ggrepel", "ggthemes", "plotrix", "plyr", "dplyr")) if (!require(p, character.only=TRUE)) install.packages(p)
+# https://stackoverflow.com/questions/4090169/elegant-way-to-check-for-missing-packages-and-install-them
 
 library(ggplot2)
 options(gsubfn.engine = "R") # Thanks to http://stackoverflow.com/questions/17128260/r-stuck-in-loading-sqldf-package
@@ -113,10 +121,10 @@ statistics <- function() {
   datGraph$mode[datGraph$mode == "RANDOM"] <- "Prnd"
   p1 <- ggplot(datGraph, aes(mode,distTA,fill=mode)) + geom_boxplot() + scale_fill_grey(start = 0.5, end = 1) + theme_bw() + noLegend #+ theme(axis.text.x=element_text(angle=0,hjust=1)) 
   print(p1)
-  ggsave(p1, file="../papers/tap2019/images/mode_distTA.pdf", width=5, height=2.3)
+  ggsave(p1, file="mode_distTA.pdf", width=5, height=2.3)
   p1 <- ggplot(datGraph, aes(mode,tests,fill=mode)) + geom_boxplot() + scale_fill_grey(start = 0.5, end = 1) + theme_bw() + noLegend #+ theme(axis.text.x=element_text(angle=0,hjust=1)) 
   print(p1)
-  ggsave(p1, file="../papers/tap2019/images/mode_tests.pdf", width=5, height=2.3)
+  ggsave(p1, file="mode_tests.pdf", width=5, height=2.3)
   
   
   

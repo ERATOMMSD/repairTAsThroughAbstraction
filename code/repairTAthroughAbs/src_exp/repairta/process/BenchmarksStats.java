@@ -14,10 +14,11 @@ public class BenchmarksStats {
 	
 	@org.junit.Test
 	public void printBenchmarksStats() throws Exception {
-		PrintWriter fout = new PrintWriter(new FileWriter("files/benchmarkStats.txt"));
+		PrintWriter fout = new PrintWriter(new FileWriter("files/benchmarkStats.csv"));
 		fout.println("benchmark,locations,transitions,assignments,distance");
 		StringBuilder sb = new StringBuilder();
 		for (Benchmark b : Benchmark.values()) {
+			RepairTimedAutomata.createFolderIfNotExists("files/temp");
 			TA pta = TAParserFromImitator.instance.loadModel(new File(b.ptaPath));
 			//System.out.println(pta);
 			

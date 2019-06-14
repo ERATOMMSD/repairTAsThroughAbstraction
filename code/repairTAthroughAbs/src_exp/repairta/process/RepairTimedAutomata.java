@@ -47,7 +47,7 @@ public class RepairTimedAutomata {
 	public static boolean USE_NOAH = System.getProperty("os.name").toLowerCase().contains("mac");
 	public static String JAVA_PATH = "C:\\Program Files\\Java\\jdk1.8.0_201\\bin\\java.exe";
 	public static String LOG_PATH = "files/log.txt";
-	public static String STAT_PATH = "files/stats.txt";
+	public static String STAT_PATH = "files/stats.csv";
 	public static final boolean EVALUATE_ONLY_NEW_TESTS=true;
 	public static final boolean USE_UPPAAL_MODEL = false;
 	public static TestGenerator[] generators = new TestGenerator[] {
@@ -69,6 +69,7 @@ public class RepairTimedAutomata {
 	};
 	
 	public static final String SEP = ",";
+	public static final String STATS_HEADER = "date,benchmark,generator,mode,depth,step,time,unconformantTests,mp,mnp,timeGeneration,timeClassification,timeImitator,timeChoco,paramValues,distFinal,semFail,semTotal,semanticDistance";
 	
 	public static void main(String[] args) throws ParseException, IOException, InterruptedException, Exception {
 		System.out.println(System.getProperty("os.name"));
@@ -268,9 +269,21 @@ public class RepairTimedAutomata {
 		printToFile(LOG_PATH, string, true);
 	}
 	
+	public static String getFirstLineOfFile(String filePath) throws IOException {
+		File f = new File(filePath);
+		if (!f.exists()) return null;
+		BufferedReader fin = new BufferedReader(new FileReader(f));
+		String line = fin.readLine();
+		fin.close();
+		return line;
+	}
+	
 	public static void stat(String string) throws IOException {
 		string = (new Date())+SEP+string;
 		System.out.println(string);
+		if (!STATS_HEADER.equals(getFirstLineOfFile(STAT_PATH))) {
+			printToFile(STAT_PATH, STATS_HEADER, false);
+		}
 		printToFile(STAT_PATH, string, true);
 	}
 	
