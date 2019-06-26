@@ -15,6 +15,7 @@ import ta.Transition;
 public class TestGeneratorJava extends TestGenerator {
 	
 	private static final Random RANDOM = new Random();
+	public static final boolean PRINT = false;
 
 	public enum Mode {
 		MINUS1_EQUAL_PLUS1,
@@ -82,7 +83,7 @@ public class TestGeneratorJava extends TestGenerator {
 		if (min<=0 && (minMax.get("max")==null || minMax.get("max")>=0)) min=0; // min is guaranteed to be 0
 		double max = minMax.get("max") == null ? -2.0 : minMax.get("max");
 		
-		System.out.println(t+" Min: "+min+" max: "+max);
+		if (PRINT) System.out.println(t+" Min: "+min+" max: "+max);
 		
 		if (mode == Mode.MINUS1_EQUAL_PLUS1 || mode == Mode.MINUS1_EQUAL_PLUS1_MIDDLE || mode == Mode.MINUS1_PLUS1 || mode == Mode.MINUS1_PLUS1_MIDDLE || mode == Mode.MINUS1_PLUS1_QUARTER || mode == Mode.MINUS1_EQUAL_PLUS1_QUARTER) {
 			Utils.addIfPositive(candidateTimes, min-1);
@@ -109,7 +110,7 @@ public class TestGeneratorJava extends TestGenerator {
 		if (mode == Mode.RANDOM || mode == Mode.RANDOM_2 || mode == Mode.RANDOM_3) {
 			candidateTimes.addAll(getRandomValues(mode==Mode.RANDOM?1: (mode==Mode.RANDOM_2?2:3), (int)(min-1), (int)(max+2)));
 		}
-		System.out.println("Test: "+t+" "+previousTime+" "+min+" "+max+" "+candidateTimes);
+		if (PRINT) System.out.println("Test: "+t+" "+previousTime+" "+min+" "+max+" "+candidateTimes);
 		for (double absTime : candidateTimes) {
 			if (absTime<0) continue;
 			Map<String,Double> clocksSoFarTemp = new HashMap<>(clocksSoFar);

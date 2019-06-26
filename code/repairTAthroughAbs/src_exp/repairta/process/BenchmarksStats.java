@@ -28,11 +28,11 @@ public class BenchmarksStats {
 			double[] semanticDistance = new DistanceCalculator().computeSemanticDistance(b.getTempTaPath(), b.ptaPath, b.ptaPathOracle, b.ptaPathTransformedForEvaluation, b.ptaPathTransformed, b.depths.get(0), b.getAssignmentsInitial(), b.getAssignmentsOracle());
 			
 			String SEP = ",";
-			String csvLine = b.modelName+SEP+(pta.locations.size()-1)+SEP+pta.transitionNames.size()+SEP+initialAssignments.size()+SEP+distanceFinalTa+SEP+Arrays.toString(semanticDistance);
+			String csvLine = b.modelName+SEP+(pta.locations.size()-1)+SEP+pta.getTotalTransitions()+SEP+initialAssignments.size()+SEP+distanceFinalTa+SEP+Arrays.toString(semanticDistance);
 			fout.println(csvLine);
 
 			SEP = " & ";
-			String tableLine = b.modelName+SEP+(pta.locations.size()-1)+SEP+pta.transitionNames.size()+SEP+initialAssignments.size()+SEP+distanceFinalTa+SEP+Arrays.toString(semanticDistance)+" \\\\";
+			String tableLine = b.modelName+SEP+(pta.locations.size()-1)+SEP+pta.getTotalTransitions()+SEP+initialAssignments.size()+SEP+distanceFinalTa+SEP+Arrays.toString(semanticDistance)+" \\\\";
 			sb.append(tableLine+"\n");
 		}
 		System.out.println(sb);

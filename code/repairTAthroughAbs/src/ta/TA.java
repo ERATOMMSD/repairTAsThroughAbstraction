@@ -158,4 +158,14 @@ public class TA {
 				+"\nLocations: "+locs
 				+"\nTransitions: "+transitions;
 	}
+	
+	public int getTotalTransitions() {
+		int sum = 0;
+		System.out.println();
+		for (Location name : transitions.keySet()) {
+			System.out.println(name+" - "+transitions.get(name).size());
+			sum += transitions.get(name).size();
+		}
+		return sum;
+	}
 }
